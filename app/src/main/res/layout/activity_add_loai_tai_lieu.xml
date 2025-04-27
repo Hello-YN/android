@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/addLTL"
     android:padding="16dp"
     android:background="#F4F4F4">
 
@@ -34,7 +35,7 @@
         android:padding="12dp"
         android:backgroundTint="#2980B9"
         android:textColor="#34495E"
-        android:hintTextColor="#BDC3C7"/>
+        />
 
     <!-- EditText cho tên loại tài liệu -->
     <EditText
@@ -49,7 +50,7 @@
         android:padding="12dp"
         android:backgroundTint="#2980B9"
         android:textColor="#34495E"
-        android:hintTextColor="#BDC3C7"/>
+       />
 
     <!-- EditText cho mô tả loại tài liệu -->
     <EditText
@@ -64,7 +65,7 @@
         android:padding="12dp"
         android:backgroundTint="#2980B9"
         android:textColor="#34495E"
-        android:hintTextColor="#BDC3C7"/>
+        />
 
     <!-- Button lưu loại tài liệu -->
     <Button

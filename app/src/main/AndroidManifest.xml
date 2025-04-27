@@ -13,13 +13,13 @@
         android:theme="@style/Theme.QuanlyTailieu"
         tools:targetApi="31">
         <activity
-            android:name=".add_loai_tai_lieu"
+            android:name=".view.add_loai_tai_lieu"
             android:exported="false" />
         <activity
-            android:name=".add_tai_lieu"
+            android:name=".view.add_tai_lieu"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
