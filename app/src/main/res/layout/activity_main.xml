@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <!-- TextView hiển thị tên ứng dụng cố định ở phía trên -->
+    <TextView
+        android:id="@+id/appName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:paddingBottom="10dp"/>
+
+    <!-- Spinner để chọn loại tài liệu -->
+    <Spinner
+        android:id="@+id/spinnerLoaiTaiLieu"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/appName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnThemLoaiTaiLieu"
+        android:contentDescription="Chọn loại tài liệu"/>
+
+    <!-- Nút thêm loại tài liệu bên cạnh Spinner -->
+
+    <!-- RecyclerView chiếm toàn bộ màn hình -->
+
+    <Button
+        android:id="@+id/btnThemLoaiTaiLieu"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="8dp"
+        android:text="+"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/spinnerLoaiTaiLieu"
+        app:layout_constraintTop_toTopOf="@id/spinnerLoaiTaiLieu" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerTaiLieu"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/spinnerLoaiTaiLieu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/danh_sach_tai_lieu"/>
+
+    <!-- FloatingActionButton cố định góc dưới phải -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnThemTaiLieu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Thêm tài liệu"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/stone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
