@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.quanlytailieu.R;
 import com.example.quanlytailieu.modle.TaiLieu;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaiLieuAdapter extends RecyclerView.Adapter<TaiLieuAdapter.TaiLieuViewHolder> {
@@ -22,11 +23,13 @@ public class TaiLieuAdapter extends RecyclerView.Adapter<TaiLieuAdapter.TaiLieuV
     private OnItemClickListener listener;
 
     // Constructor duy nhất
+
     public TaiLieuAdapter(Context context, List<TaiLieu> danhSach, OnItemClickListener listener) {
         this.context = context;
-        this.danhSach = danhSach;
+        this.danhSach = (danhSach != null) ? danhSach : new ArrayList<>();
         this.listener = listener;
     }
+
 
     @NonNull
     @Override

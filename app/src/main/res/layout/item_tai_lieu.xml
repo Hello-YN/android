@@ -17,7 +17,7 @@
             android:id="@+id/imgIcon"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/baseline_edit_document_24"
+            android:src="@drawable/tailieu"
             android:contentDescription="Icon tài liệu" />
 
 
@@ -32,7 +32,7 @@
                 android:id="@+id/tvTenTaiLieu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="serif"
+                android:fontFamily="@font/abyssinica_sil"
                 android:text="Tên tài liệu"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -41,7 +41,7 @@
                 android:id="@+id/tvKichThuoc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="monospace"
+                android:fontFamily="@font/abyssinica_sil"
                 android:text="Kích thước"
                 android:textColor="#555"
                 android:textSize="14sp" />
@@ -55,7 +55,8 @@
             android:contentDescription="Sửa"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="centerInside"
-            card_view:tint="@color/deepaqua"/>
+
+            />
 
         <ImageButton
             android:id="@+id/btnXoa"
@@ -65,7 +66,7 @@
             android:contentDescription="Xóa"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="centerInside"
-            card_view:tint="@color/den"/>
+            />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
