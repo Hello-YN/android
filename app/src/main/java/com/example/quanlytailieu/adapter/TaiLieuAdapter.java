@@ -1,6 +1,7 @@
 package com.example.quanlytailieu.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.quanlytailieu.R;
 import com.example.quanlytailieu.modle.TaiLieu;
+import com.example.quanlytailieu.view.ChiTietTaiLieu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +25,11 @@ public class TaiLieuAdapter extends RecyclerView.Adapter<TaiLieuAdapter.TaiLieuV
     private OnItemClickListener listener;
 
     // Constructor duy nhất
-
     public TaiLieuAdapter(Context context, List<TaiLieu> danhSach, OnItemClickListener listener) {
         this.context = context;
         this.danhSach = (danhSach != null) ? danhSach : new ArrayList<>();
         this.listener = listener;
     }
-
 
     @NonNull
     @Override
@@ -46,6 +46,13 @@ public class TaiLieuAdapter extends RecyclerView.Adapter<TaiLieuAdapter.TaiLieuV
         // Gán giá trị vào các TextView
         holder.tvTen.setText(tl.getTenTaiLieu());
         holder.tvKichThuoc.setText(tl.getKichThuoc() / 1024 + " KB");
+
+        // Sự kiện click vào item để mở trang chi tiết
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ChiTietTaiLieu.class);
+            intent.putExtra("maTaiLieu", tl.getMaTaiLieu());
+            context.startActivity(intent);
+        });
 
         // Sự kiện click vào nút sửa
         holder.btnSua.setOnClickListener(v -> listener.onEdit(tl));

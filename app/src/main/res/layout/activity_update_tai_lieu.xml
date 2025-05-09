@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F4F4"
+    android:padding="16dp">
+
+    <!-- Tiêu đề -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:gravity="center"
+        android:text="Cập nhật tài liệu"
+        android:textColor="#2C3E50"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Mã tài liệu -->
+    <TextView
+        android:id="@+id/tvMaTaiLieuLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:text="Mã tài liệu:"
+        android:textColor="#34495E"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+    <TextView
+        android:id="@+id/tvMaTaiLieu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:textColor="#2C3E50"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvMaTaiLieuLabel"
+        app:layout_constraintTop_toTopOf="@id/tvMaTaiLieuLabel" />
+
+    <!-- Tên tài liệu -->
+    <TextView
+        android:id="@+id/tvTenTaiLieuLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:text="Tên tài liệu:"
+        android:textColor="#34495E"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvMaTaiLieuLabel" />
+
+    <EditText
+        android:id="@+id/etTenTaiLieu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:hint="Nhập tên tài liệu"
+        android:inputType="text"
+        android:textColor="#2C3E50"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvTenTaiLieuLabel"
+        app:layout_constraintTop_toTopOf="@id/tvTenTaiLieuLabel" />
+
+    <!-- Loại tài liệu -->
+    <TextView
+        android:id="@+id/tvLoaiTaiLieuLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:text="Loại tài liệu:"
+        android:textColor="#34495E"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTenTaiLieuLabel" />
+
+    <Spinner
+        android:id="@+id/spinnerLoaiTaiLieu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvLoaiTaiLieuLabel"
+        app:layout_constraintTop_toTopOf="@id/tvLoaiTaiLieuLabel" />
+
+    <!-- Đường dẫn -->
+    <TextView
+        android:id="@+id/tvLinkDownLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:text="Đường dẫn:"
+        android:textColor="#34495E"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvLoaiTaiLieuLabel" />
+
+    <EditText
+        android:id="@+id/etLinkDown"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:hint="Nhập đường dẫn tải"
+        android:inputType="textUri"
+        android:textColor="#2C3E50"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvLinkDownLabel"
+        app:layout_constraintTop_toTopOf="@id/tvLinkDownLabel" />
+
+    <!-- Nút lưu -->
+
+    <!-- Nút quay lại -->
+
+    <Button
+        android:id="@+id/btnLuuTaiLieu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="104dp"
+        android:backgroundTint="@android:color/white"
+        android:elevation="4dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:text="Lưu"
+        android:textColor="#2980B9"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnQuayLai"
+        app:layout_constraintTop_toTopOf="@+id/btnQuayLai" />
+
+    <Button
+        android:id="@+id/btnQuayLai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="100dp"
+        android:backgroundTint="@android:color/white"
+        android:elevation="4dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:text="Quay lại"
+        android:textColor="#2980B9"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etLinkDown" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

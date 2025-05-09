@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "qltailieu.db";
-    private static final int DATABASE_VERSION = 3; // Tăng lên 3 để đảm bảo xóa database cũ
+    private static final int DATABASE_VERSION = 4;
 
     // Bảng LoaiTaiLieu
     private static final String TABLE_LOAI_TAI_LIEU = "LoaiTaiLieu";
@@ -38,41 +38,68 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Tạo bảng LoaiTaiLieu
-        String createLoaiTaiLieuTable = "CREATE TABLE " + TABLE_LOAI_TAI_LIEU + " (" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_MA_LOAI + " TEXT NOT NULL UNIQUE, " +
-                COLUMN_TEN_LOAI + " TEXT NOT NULL, " +
-                COLUMN_MO_TA + " TEXT, " +
-                COLUMN_IS_DELETE + " INTEGER DEFAULT 0)";
-        db.execSQL(createLoaiTaiLieuTable);
+        // Kiểm tra xem bảng LoaiTaiLieu đã tồn tại chưa
+        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name=?", new String[]{TABLE_LOAI_TAI_LIEU});
+        boolean tableLoaiTaiLieuExists = cursor.getCount() > 0;
+        cursor.close();
 
-        // Tạo bảng TaiLieu
-        String createTaiLieuTable = "CREATE TABLE " + TABLE_TAI_LIEU + " (" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_MA_TAI_LIEU + " TEXT NOT NULL UNIQUE, " +
-                COLUMN_TEN_TAI_LIEU + " TEXT NOT NULL, " +
-                COLUMN_ID_LOAI + " INTEGER, " +
-                COLUMN_LINK_DOWN + " TEXT, " +
-                COLUMN_KICH_THUOC + " INTEGER, " +
-                COLUMN_IS_DELETE + " INTEGER DEFAULT 0, " +
-                "FOREIGN KEY (" + COLUMN_ID_LOAI + ") REFERENCES " + TABLE_LOAI_TAI_LIEU + "(" + COLUMN_ID + "))";
-        db.execSQL(createTaiLieuTable);
+        if (!tableLoaiTaiLieuExists) {
+            String createLoaiTaiLieuTable = "CREATE TABLE " + TABLE_LOAI_TAI_LIEU + " (" +
+                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_MA_LOAI + " TEXT NOT NULL UNIQUE, " +
+                    COLUMN_TEN_LOAI + " TEXT NOT NULL, " +
+                    COLUMN_MO_TA + " TEXT, " +
+                    COLUMN_IS_DELETE + " INTEGER DEFAULT 0)";
+            db.execSQL(createLoaiTaiLieuTable);
+        }
 
-        // Chèn dữ liệu mẫu
-        String sqlLoai = "INSERT INTO LoaiTaiLieu (maLoai, tenLoai, moTa, isDelete) VALUES" +
-                "('LT001', 'Sách giáo khoa', 'Sách học tập chính khóa', 0)," +
-                "('LT002', 'Tài liệu tham khảo', 'Sách tham khảo kiến thức', 0)," +
-                "('LT003', 'Luận văn', 'Luận văn tốt nghiệp', 0)," +
-                "('LT004', 'Tạp chí', 'Tạp chí khoa học', 0);";
-        db.execSQL(sqlLoai);
+        // Kiểm tra xem bảng TaiLieu đã tồn tại chưa
+        cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name=?", new String[]{TABLE_TAI_LIEU});
+        boolean tableTaiLieuExists = cursor.getCount() > 0;
+        cursor.close();
 
-        String sqlTaiLieu = "INSERT INTO TaiLieu (maTaiLieu, tenTaiLieu, idLoai, linkDown, kichThuoc, isDelete) VALUES" +
-                "('TL001', 'Toán lớp 12', 1, 'https://example.com/toan12.pdf', 2048000, 0)," +
-                "('TL002', 'Vật lý nâng cao', 2, 'https://example.com/vatly_nangcao.pdf', 3072000, 0)," +
-                "('TL003', 'Luận văn CNTT', 3, 'https://example.com/luanvan_cntt.pdf', 5120000, 0)," +
-                "('TL004', 'Tạp chí Khoa học số 1', 4, 'https://example.com/tapchi_khoahoc1.pdf', 1024000, 0);";
-        db.execSQL(sqlTaiLieu);
+        if (!tableTaiLieuExists) {
+            String createTaiLieuTable = "CREATE TABLE " + TABLE_TAI_LIEU + " (" +
+                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_MA_TAI_LIEU + " TEXT NOT NULL UNIQUE, " +
+                    COLUMN_TEN_TAI_LIEU + " TEXT NOT NULL, " +
+                    COLUMN_ID_LOAI + " INTEGER, " +
+                    COLUMN_LINK_DOWN + " TEXT, " +
+                    COLUMN_KICH_THUOC + " INTEGER, " +
+                    COLUMN_IS_DELETE + " INTEGER DEFAULT 0, " +
+                    "FOREIGN KEY (" + COLUMN_ID_LOAI + ") REFERENCES " + TABLE_LOAI_TAI_LIEU + "(" + COLUMN_ID + "))";
+            db.execSQL(createTaiLieuTable);
+        }
+
+        // Chèn dữ liệu mẫu nếu bảng LoaiTaiLieu rỗng
+        cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_LOAI_TAI_LIEU, null);
+        cursor.moveToFirst();
+        int countLoai = cursor.getInt(0);
+        cursor.close();
+
+        if (countLoai == 0) {
+            String sqlLoai = "INSERT INTO LoaiTaiLieu (maLoai, tenLoai, moTa, isDelete) VALUES" +
+                    "('LT001', 'Sách giáo khoa', 'Sách học tập chính khóa', 0)," +
+                    "('LT002', 'Tài liệu tham khảo', 'Sách tham khảo kiến thức', 0)," +
+                    "('LT003', 'Luận văn', 'Luận văn tốt nghiệp', 0)," +
+                    "('LT004', 'Tạp chí', 'Tạp chí khoa học', 0);";
+            db.execSQL(sqlLoai);
+        }
+
+        // Chèn dữ liệu mẫu nếu bảng TaiLieu rỗng
+        cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_TAI_LIEU, null);
+        cursor.moveToFirst();
+        int countTaiLieu = cursor.getInt(0);
+        cursor.close();
+
+        if (countTaiLieu == 0) {
+            String sqlTaiLieu = "INSERT INTO TaiLieu (maTaiLieu, tenTaiLieu, idLoai, linkDown, kichThuoc, isDelete) VALUES" +
+                    "('TL001', 'Toán lớp 12', 1, 'https://example.com/toan12.pdf', 2048000, 0)," +
+                    "('TL002', 'Vật lý nâng cao', 2, 'https://example.com/vatly_nangcao.pdf', 3072000, 0)," +
+                    "('TL003', 'Luận văn CNTT', 3, 'https://example.com/luanvan_cntt.pdf', 5120000, 0)," +
+                    "('TL004', 'Tạp chí Khoa học số 1', 4, 'https://example.com/tapchi_khoahoc1.pdf', 1024000, 0);";
+            db.execSQL(sqlTaiLieu);
+        }
     }
 
     @Override
@@ -122,6 +149,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return loaiTaiLieuList;
     }
 
+    // Lấy LoaiTaiLieu theo id
+    public LoaiTaiLieu getLoaiTaiLieuById(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_LOAI_TAI_LIEU,
+                new String[]{COLUMN_ID, COLUMN_MA_LOAI, COLUMN_TEN_LOAI, COLUMN_MO_TA, COLUMN_IS_DELETE},
+                COLUMN_ID + "=? AND " + COLUMN_IS_DELETE + "=0",
+                new String[]{String.valueOf(id)},
+                null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            LoaiTaiLieu loaiTaiLieu = new LoaiTaiLieu(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MA_LOAI)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEN_LOAI)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MO_TA))
+            );
+            loaiTaiLieu.setDelete(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_DELETE)) == 1);
+            cursor.close();
+            db.close();
+            return loaiTaiLieu;
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+        return null;
+    }
+
     // Thêm TaiLieu
     public long addTaiLieu(TaiLieu taiLieu) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -133,17 +189,73 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_KICH_THUOC, taiLieu.getKichThuoc());
         values.put(COLUMN_IS_DELETE, taiLieu.isDelete() ? 1 : 0);
 
-        long result = db.insert(TABLE_TAI_LIEU, null, values); // Sửa lỗi: dùng TABLE_TAI_LIEU thay vì TABLE_LOAI_TAI_LIEU
+        long result = db.insert(TABLE_TAI_LIEU, null, values);
         db.close();
         return result;
     }
 
-    // Đếm số lượng tài liệu
-    public int getTaiLieuCount() {
-        String query = "SELECT * FROM " + TABLE_TAI_LIEU + " WHERE " + COLUMN_IS_DELETE + " = 0";
+    // Cập nhật TaiLieu
+    public boolean updateTaiLieu(TaiLieu taiLieu) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TEN_TAI_LIEU, taiLieu.getTenTaiLieu());
+        values.put(COLUMN_ID_LOAI, taiLieu.getIdLoai());
+        values.put(COLUMN_LINK_DOWN, taiLieu.getLinkDown());
+        values.put(COLUMN_KICH_THUOC, taiLieu.getKichThuoc());
+        values.put(COLUMN_IS_DELETE, taiLieu.isDelete() ? 1 : 0);
+
+        int rowsAffected = db.update(TABLE_TAI_LIEU, values, COLUMN_MA_TAI_LIEU + "=?", new String[]{taiLieu.getMaTaiLieu()});
+        db.close();
+        return rowsAffected > 0;
+    }
+
+    // Xóa mềm TaiLieu
+    public boolean deleteTaiLieu(String maTaiLieu) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_IS_DELETE, 1);
+
+        int rowsAffected = db.update(TABLE_TAI_LIEU, values, COLUMN_MA_TAI_LIEU + "=?", new String[]{maTaiLieu});
+        db.close();
+        return rowsAffected > 0;
+    }
+
+    // Lấy TaiLieu theo maTaiLieu
+    public TaiLieu getTaiLieuByMa(String maTaiLieu) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
-        int count = cursor.getCount();
+        Cursor cursor = db.query(TABLE_TAI_LIEU,
+                new String[]{COLUMN_ID, COLUMN_MA_TAI_LIEU, COLUMN_TEN_TAI_LIEU, COLUMN_ID_LOAI, COLUMN_LINK_DOWN, COLUMN_KICH_THUOC, COLUMN_IS_DELETE},
+                COLUMN_MA_TAI_LIEU + "=? AND " + COLUMN_IS_DELETE + "=0",
+                new String[]{maTaiLieu},
+                null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            TaiLieu taiLieu = new TaiLieu(
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MA_TAI_LIEU)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEN_TAI_LIEU)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID_LOAI)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LINK_DOWN)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_KICH_THUOC)) == 1
+            );
+            taiLieu.setKichThuoc(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_KICH_THUOC)));
+            cursor.close();
+            db.close();
+            return taiLieu;
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+        return null;
+    }
+
+    // Lấy số lượng TaiLieu
+    public int getTaiLieuCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_TAI_LIEU + " WHERE " + COLUMN_IS_DELETE + "=0", null);
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
         cursor.close();
         db.close();
         return count;
