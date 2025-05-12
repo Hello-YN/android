@@ -1,8 +1,6 @@
 package com.example.quanlytailieu.view;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
@@ -66,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         taiLieuAdapter = new TaiLieuAdapter(this, danhSachTaiLieu, new TaiLieuAdapter.OnItemClickListener() {
             @Override
             public void onEdit(TaiLieu taiLieu) {
-                Toast.makeText(MainActivity.this, "Chức năng sửa chưa được triển khai", Toast.LENGTH_SHORT).show();
+                // Không còn nút sửa, bỏ logic này
             }
 
             @Override

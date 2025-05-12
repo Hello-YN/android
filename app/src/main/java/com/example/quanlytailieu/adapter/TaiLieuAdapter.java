@@ -16,17 +16,21 @@ import com.example.quanlytailieu.R;
 import com.example.quanlytailieu.modle.TaiLieu;
 import com.example.quanlytailieu.view.ChiTietTaiLieu;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TaiLieuAdapter extends RecyclerView.Adapter<TaiLieuAdapter.TaiLieuViewHolder> {
-    private List<TaiLieu> danhSach;
     private Context context;
+    private List<TaiLieu> taiLieuList;
     private OnItemClickListener listener;
 
-    public TaiLieuAdapter(Context context, List<TaiLieu> danhSach, OnItemClickListener listener) {
+    public interface OnItemClickListener {
+        void onEdit(TaiLieu taiLieu);
+        void onDelete(TaiLieu taiLieu);
+    }
+
+    public TaiLieuAdapter(Context context, List<TaiLieu> taiLieuList, OnItemClickListener listener) {
         this.context = context;
-        this.danhSach = (danhSach != null) ? danhSach : new ArrayList<>();
+        this.taiLieuList = taiLieuList;
         this.listener = listener;
     }
 
@@ -39,55 +43,46 @@ public class TaiLieuAdapter extends RecyclerView.Adapter<TaiLieuAdapter.TaiLieuV
 
     @Override
     public void onBindViewHolder(@NonNull TaiLieuViewHolder holder, int position) {
-        TaiLieu tl = danhSach.get(position);
+        TaiLieu taiLieu = taiLieuList.get(position);
+        holder.tvTenTaiLieu.setText(taiLieu.getTenTaiLieu());
+        holder.tvKichThuoc.setText(formatSize(taiLieu.getKichThuoc()));
 
-        holder.tvTen.setText(tl.getTenTaiLieu());
-        holder.tvKichThuoc.setText(formatSize(tl.getKichThuoc()));
+        holder.btnXoa.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onDelete(taiLieu);
+            }
+        });
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ChiTietTaiLieu.class);
-            intent.putExtra("maTaiLieu", tl.getMaTaiLieu());
+            intent.putExtra("maTaiLieu", taiLieu.getMaTaiLieu());
             context.startActivity(intent);
         });
-
-        holder.btnSua.setOnClickListener(v -> listener.onEdit(tl));
-        holder.btnXoa.setOnClickListener(v -> listener.onDelete(tl));
     }
 
     @Override
     public int getItemCount() {
-        return danhSach.size();
+        return taiLieuList != null ? taiLieuList.size() : 0;
     }
 
-    public void updateData(List<TaiLieu> newData) {
-        this.danhSach.clear();
-        this.danhSach.addAll(newData);
-        notifyDataSetChanged();
-    }
-
-    private String formatSize(long bytes) {
-        if (bytes < 1024) return bytes + " B";
-        if (bytes < 1024 * 1024) return String.format("%.2f KB", bytes / 1024.0);
-        return String.format("%.2f MB", bytes / (1024.0 * 1024.0));
-    }
-
-    public class TaiLieuViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTen, tvKichThuoc;
+    static class TaiLieuViewHolder extends RecyclerView.ViewHolder {
         ImageView imgIcon;
-        ImageButton btnSua, btnXoa;
+        TextView tvTenTaiLieu, tvKichThuoc;
+        ImageButton btnXoa;
 
         public TaiLieuViewHolder(@NonNull View itemView) {
             super(itemView);
             imgIcon = itemView.findViewById(R.id.imgIcon);
-            tvTen = itemView.findViewById(R.id.tvTenTaiLieu);
+            tvTenTaiLieu = itemView.findViewById(R.id.tvTenTaiLieu);
             tvKichThuoc = itemView.findViewById(R.id.tvKichThuoc);
-            btnSua = itemView.findViewById(R.id.btnSua);
             btnXoa = itemView.findViewById(R.id.btnXoa);
         }
     }
 
-    public interface OnItemClickListener {
-        void onEdit(TaiLieu taiLieu);
-        void onDelete(TaiLieu taiLieu);
+    private String formatSize(long size) {
+        if (size <= 0) return "0 B";
+        final String[] units = new String[]{"B", "KB", "MB", "GB"};
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        return String.format("%.2f %s", size / Math.pow(1024, digitGroups), units[digitGroups]);
     }
 }

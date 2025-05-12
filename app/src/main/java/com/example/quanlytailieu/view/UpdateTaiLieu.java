@@ -1,7 +1,8 @@
 package com.example.quanlytailieu.view;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class UpdateTaiLieu extends AppCompatActivity {
     private TextView tvMaTaiLieu;
-    private EditText etTenTaiLieu, etLinkDown;
+    private EditText etTenTaiLieu, etLinkDown, etKichThuoc;
     private Spinner spinnerLoaiTaiLieu;
     private Button btnLuuTaiLieu, btnQuayLai;
     private DatabaseHelper dbHelper;
@@ -36,6 +37,7 @@ public class UpdateTaiLieu extends AppCompatActivity {
         tvMaTaiLieu = findViewById(R.id.tvMaTaiLieu);
         etTenTaiLieu = findViewById(R.id.etTenTaiLieu);
         etLinkDown = findViewById(R.id.etLinkDown);
+        etKichThuoc = findViewById(R.id.etKichThuoc);
         spinnerLoaiTaiLieu = findViewById(R.id.spinnerLoaiTaiLieu);
         btnLuuTaiLieu = findViewById(R.id.btnLuuTaiLieu);
         btnQuayLai = findViewById(R.id.btnQuayLai);
@@ -60,6 +62,7 @@ public class UpdateTaiLieu extends AppCompatActivity {
         btnLuuTaiLieu.setOnClickListener(v -> {
             String tenTaiLieu = etTenTaiLieu.getText().toString().trim();
             String linkDown = etLinkDown.getText().toString().trim();
+            String kichThuocStr = etKichThuoc.getText().toString().trim();
             LoaiTaiLieu selectedLoai = (LoaiTaiLieu) spinnerLoaiTaiLieu.getSelectedItem();
 
             if (tenTaiLieu.isEmpty() || selectedLoai == null) {
@@ -67,12 +70,27 @@ public class UpdateTaiLieu extends AppCompatActivity {
                 return;
             }
 
+            long kichThuoc = 0;
+            if (!kichThuocStr.isEmpty()) {
+                try {
+                    kichThuoc = Long.parseLong(kichThuocStr);
+                    if (kichThuoc < 0) {
+                        Toast.makeText(this, "Kích thước không được âm", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } catch (NumberFormatException e) {
+                    Toast.makeText(this, "Kích thước phải là số hợp lệ", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
             TaiLieu taiLieu = new TaiLieu(maTaiLieu, tenTaiLieu, selectedLoai.getId(), linkDown, false);
-            taiLieu.setKichThuoc(0); // Giá trị mặc định vì không có trường nhập kích thước
+            taiLieu.setKichThuoc(kichThuoc);
 
             boolean result = dbHelper.updateTaiLieu(taiLieu);
             if (result) {
                 Toast.makeText(this, "Cập nhật tài liệu thành công", Toast.LENGTH_SHORT).show();
+                clearFocusAndHideKeyboard();
                 finish();
             } else {
                 Toast.makeText(this, "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
@@ -80,16 +98,14 @@ public class UpdateTaiLieu extends AppCompatActivity {
         });
 
         // Xử lý nút Quay lại
-        btnQuayLai.setOnClickListener(v -> finish());
+        btnQuayLai.setOnClickListener(v -> {
+            clearFocusAndHideKeyboard();
+            finish();
+        });
     }
 
     private void setupSpinner() {
         loaiTaiLieuList = dbHelper.getAllLoaiTaiLieu();
-        Log.d("UpdateTaiLieu", "Số lượng loại tài liệu: " + loaiTaiLieuList.size());
-        for (LoaiTaiLieu loai : loaiTaiLieuList) {
-            Log.d("UpdateTaiLieu", "LoaiTaiLieu: id=" + loai.getId() + ", tenLoai=" + loai.getTenLoai());
-        }
-
         ArrayAdapter<LoaiTaiLieu> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, loaiTaiLieuList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLoaiTaiLieu.setAdapter(adapter);
@@ -106,6 +122,7 @@ public class UpdateTaiLieu extends AppCompatActivity {
         tvMaTaiLieu.setText(taiLieu.getMaTaiLieu());
         etTenTaiLieu.setText(taiLieu.getTenTaiLieu());
         etLinkDown.setText(taiLieu.getLinkDown());
+        etKichThuoc.setText(String.valueOf(taiLieu.getKichThuoc()));
 
         // Chọn loại tài liệu trong Spinner
         for (int i = 0; i < loaiTaiLieuList.size(); i++) {
@@ -113,6 +130,19 @@ public class UpdateTaiLieu extends AppCompatActivity {
                 spinnerLoaiTaiLieu.setSelection(i);
                 break;
             }
+        }
+    }
+
+    private void clearFocusAndHideKeyboard() {
+        // Xóa focus khỏi EditText
+        if (getCurrentFocus() != null) {
+            getCurrentFocus().clearFocus();
+        }
+
+        // Đóng bàn phím ảo
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null && getCurrentFocus() != null) {
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
     }
 }

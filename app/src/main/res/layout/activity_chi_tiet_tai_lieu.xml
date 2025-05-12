@@ -124,11 +124,12 @@
         app:layout_constraintTop_toTopOf="@id/tvLinkDownLabel" />
 
     <!-- Kích thước -->
+
     <TextView
         android:id="@+id/tvKichThuocLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="104dp"
         android:fontFamily="@font/abyssinica_sil"
         android:text="Kích thước:"
         android:textColor="#34495E"
@@ -149,23 +150,25 @@
         app:layout_constraintTop_toTopOf="@id/tvKichThuocLabel" />
 
     <!-- Nút chỉnh sửa -->
+
+    <!-- Nút quay lại -->
+
     <ImageButton
         android:id="@+id/btnSua"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginStart="132dp"
         android:background="@android:color/transparent"
         android:contentDescription="Chỉnh sửa tài liệu"
         android:src="@android:drawable/ic_menu_edit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvKichThuocLabel" />
+        app:layout_constraintBottom_toBottomOf="@+id/btnQuayLai"
+        app:layout_constraintStart_toEndOf="@+id/btnQuayLai" />
 
-    <!-- Nút quay lại -->
     <Button
         android:id="@+id/btnQuayLai"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="116dp"
         android:backgroundTint="@android:color/white"
         android:elevation="4dp"
         android:fontFamily="@font/abyssinica_sil"
@@ -176,7 +179,7 @@
         android:text="Quay lại"
         android:textColor="#2980B9"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnSua" />
+        app:layout_constraintTop_toBottomOf="@+id/tvKichThuoc"
+        tools:layout_editor_absoluteX="69dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

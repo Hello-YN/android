@@ -6,25 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F4F4F4"
-    android:padding="16dp">
-
-    <!-- TextView hiển thị tên màn hình -->
-
-    <!-- EditText cho tên tài liệu -->
-
-    <!-- Spinner cho loại tài liệu -->
-
-    <!-- EditText cho đường dẫn tài liệu -->
-
-    <!-- Button quay lại -->
-
-    <!-- Button lưu tài liệu -->
+    android:padding="16dp"
+    android:descendantFocusability="beforeDescendants">
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/abyssinica_sil"
         android:gravity="center"
         android:text="Thêm Tài Liệu"
@@ -36,29 +25,45 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
+        android:id="@+id/etMaTaiLieu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#2980B9"
+        android:fontFamily="@font/abyssinica_sil"
+        android:hint="Mã tài liệu"
+        android:padding="12dp"
+        android:textColor="#34495E"
+        android:inputType="text"
+        android:focusableInTouchMode="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <EditText
         android:id="@+id/etTenTaiLieu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="92dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#2980B9"
         android:fontFamily="@font/abyssinica_sil"
         android:hint="Tên tài liệu"
         android:padding="12dp"
         android:textColor="#34495E"
+        android:inputType="text"
+        android:focusableInTouchMode="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title" />
+        app:layout_constraintTop_toBottomOf="@id/etMaTaiLieu" />
 
     <Spinner
         android:id="@+id/spinnerLoaiTaiLieu"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#2980B9"
         android:contentDescription="Chọn loại tài liệu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etTenTaiLieu" />
 
@@ -66,27 +71,42 @@
         android:id="@+id/etLinkDown"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#2980B9"
         android:fontFamily="@font/abyssinica_sil"
         android:hint="Đường dẫn tài liệu"
         android:padding="12dp"
         android:textColor="#34495E"
+        android:inputType="textUri"
+        android:focusableInTouchMode="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinnerLoaiTaiLieu" />
+
+    <EditText
+        android:id="@+id/etKichThuoc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#2980B9"
+        android:fontFamily="@font/abyssinica_sil"
+        android:hint="Kích thước (bytes)"
+        android:padding="12dp"
+        android:textColor="#34495E"
+        android:inputType="number"
+        android:focusableInTouchMode="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etLinkDown" />
 
     <Button
         android:id="@+id/btnQuayLai"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="68dp"
-
         android:backgroundTint="@android:color/white"
         android:elevation="4dp"
-
         android:fontFamily="@font/abyssinica_sil"
         android:gravity="center"
         android:paddingStart="16dp"
@@ -97,16 +117,15 @@
         android:textColor="#2980B9"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/btnLuuTaiLieu"
-        app:layout_constraintHorizontal_bias="0.918"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etLinkDown"
+        app:layout_constraintTop_toBottomOf="@id/etKichThuoc"
         tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/btnLuuTaiLieu"
         android:layout_width="147dp"
         android:layout_height="53dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="36dp"
         android:background="#3498DB"
         android:elevation="6dp"
@@ -115,6 +134,6 @@
         android:text="Lưu Tài Liệu"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnQuayLai" />
+        app:layout_constraintTop_toBottomOf="@id/etKichThuoc" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

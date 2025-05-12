@@ -70,6 +70,7 @@
         android:inputType="text"
         android:textColor="#2C3E50"
         android:textSize="16sp"
+        android:focusableInTouchMode="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tvTenTaiLieuLabel"
         app:layout_constraintTop_toTopOf="@id/tvTenTaiLieuLabel" />
@@ -121,14 +122,61 @@
         android:inputType="textUri"
         android:textColor="#2C3E50"
         android:textSize="16sp"
+        android:focusableInTouchMode="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tvLinkDownLabel"
         app:layout_constraintTop_toTopOf="@id/tvLinkDownLabel" />
 
-    <!-- Nút lưu -->
+    <!-- Kích thước -->
 
-    <!-- Nút quay lại -->
+    <TextView
+        android:id="@+id/tvKichThuocLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="84dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:text="Kích thước (bytes):"
+        android:textColor="#34495E"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvLinkDownLabel" />
 
+    <EditText
+        android:id="@+id/etKichThuoc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:hint="Nhập kích thước"
+        android:inputType="number"
+        android:textColor="#2C3E50"
+        android:textSize="16sp"
+        android:focusableInTouchMode="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvKichThuocLabel"
+        app:layout_constraintTop_toTopOf="@id/tvKichThuocLabel" />
+
+    <!-- Nút Quay lại -->
+    <Button
+        android:id="@+id/btnQuayLai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@android:color/white"
+        android:elevation="4dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:text="Quay lại"
+        android:textColor="#2980B9"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvKichThuocLabel" />
+
+    <!-- Nút Lưu -->
     <Button
         android:id="@+id/btnLuuTaiLieu"
         android:layout_width="wrap_content"
@@ -145,26 +193,7 @@
         android:textColor="#2980B9"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnQuayLai"
-        app:layout_constraintTop_toTopOf="@+id/btnQuayLai" />
-
-    <Button
-        android:id="@+id/btnQuayLai"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="100dp"
-        android:backgroundTint="@android:color/white"
-        android:elevation="4dp"
-        android:fontFamily="@font/abyssinica_sil"
-        android:paddingStart="16dp"
-        android:paddingTop="8dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp"
-        android:text="Quay lại"
-        android:textColor="#2980B9"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etLinkDown" />
+        app:layout_constraintStart_toEndOf="@id/btnQuayLai"
+        app:layout_constraintTop_toTopOf="@id/btnQuayLai" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

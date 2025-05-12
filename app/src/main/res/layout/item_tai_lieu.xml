@@ -47,15 +47,6 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/btnSua"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@android:drawable/ic_menu_edit"
-            android:contentDescription="Sửa"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:scaleType="centerInside" />
-
-        <ImageButton
             android:id="@+id/btnXoa"
             android:layout_width="48dp"
             android:layout_height="48dp"
