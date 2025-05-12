@@ -38,7 +38,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Kiểm tra xem bảng LoaiTaiLieu đã tồn tại chưa
         Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name=?", new String[]{TABLE_LOAI_TAI_LIEU});
         boolean tableLoaiTaiLieuExists = cursor.getCount() > 0;
         cursor.close();
@@ -53,7 +52,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(createLoaiTaiLieuTable);
         }
 
-        // Kiểm tra xem bảng TaiLieu đã tồn tại chưa
         cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name=?", new String[]{TABLE_TAI_LIEU});
         boolean tableTaiLieuExists = cursor.getCount() > 0;
         cursor.close();
@@ -71,7 +69,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(createTaiLieuTable);
         }
 
-        // Chèn dữ liệu mẫu nếu bảng LoaiTaiLieu rỗng
         cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_LOAI_TAI_LIEU, null);
         cursor.moveToFirst();
         int countLoai = cursor.getInt(0);
@@ -86,7 +83,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(sqlLoai);
         }
 
-        // Chèn dữ liệu mẫu nếu bảng TaiLieu rỗng
         cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_TAI_LIEU, null);
         cursor.moveToFirst();
         int countTaiLieu = cursor.getInt(0);
@@ -109,7 +105,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Thêm LoaiTaiLieu
     public long addLoaiTaiLieu(LoaiTaiLieu loaiTaiLieu) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -123,7 +118,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    // Lấy tất cả LoaiTaiLieu
+    public boolean updateLoaiTaiLieu(LoaiTaiLieu loaiTaiLieu) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_MA_LOAI, loaiTaiLieu.getMaLoai());
+        values.put(COLUMN_TEN_LOAI, loaiTaiLieu.getTenLoai());
+        values.put(COLUMN_MO_TA, loaiTaiLieu.getMoTa());
+        values.put(COLUMN_IS_DELETE, loaiTaiLieu.isDelete() ? 1 : 0);
+
+        int rowsAffected = db.update(TABLE_LOAI_TAI_LIEU, values, COLUMN_ID + "=?", new String[]{String.valueOf(loaiTaiLieu.getId())});
+        db.close();
+        return rowsAffected > 0;
+    }
+
+    public boolean deleteLoaiTaiLieu(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_IS_DELETE, 1);
+
+        int rowsAffected = db.update(TABLE_LOAI_TAI_LIEU, values, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
+        db.close();
+        return rowsAffected > 0;
+    }
+
     public List<LoaiTaiLieu> getAllLoaiTaiLieu() {
         List<LoaiTaiLieu> loaiTaiLieuList = new ArrayList<>();
         String query = "SELECT * FROM " + TABLE_LOAI_TAI_LIEU + " WHERE " + COLUMN_IS_DELETE + " = 0";
@@ -149,7 +166,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return loaiTaiLieuList;
     }
 
-    // Lấy LoaiTaiLieu theo id
     public LoaiTaiLieu getLoaiTaiLieuById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_LOAI_TAI_LIEU,
@@ -178,7 +194,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    // Thêm TaiLieu
     public long addTaiLieu(TaiLieu taiLieu) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -194,7 +209,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    // Cập nhật TaiLieu
     public boolean updateTaiLieu(TaiLieu taiLieu) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -209,7 +223,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rowsAffected > 0;
     }
 
-    // Xóa mềm TaiLieu
     public boolean deleteTaiLieu(String maTaiLieu) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -220,7 +233,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rowsAffected > 0;
     }
 
-    // Lấy TaiLieu theo maTaiLieu
     public TaiLieu getTaiLieuByMa(String maTaiLieu) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_TAI_LIEU,
@@ -235,9 +247,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEN_TAI_LIEU)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID_LOAI)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LINK_DOWN)),
-                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_KICH_THUOC)) == 1
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_DELETE)) == 1
             );
-            taiLieu.setKichThuoc(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_KICH_THUOC)));
+            taiLieu.setKichThuoc(cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_KICH_THUOC)));
             cursor.close();
             db.close();
             return taiLieu;
@@ -250,7 +262,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    // Lấy số lượng TaiLieu
     public int getTaiLieuCount() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_TAI_LIEU + " WHERE " + COLUMN_IS_DELETE + "=0", null);
@@ -259,5 +270,80 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return count;
+    }
+
+    public List<TaiLieu> getAllTaiLieu() {
+        List<TaiLieu> taiLieuList = new ArrayList<>();
+        String query = "SELECT * FROM " + TABLE_TAI_LIEU + " WHERE " + COLUMN_IS_DELETE + "=0";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                TaiLieu taiLieu = new TaiLieu(
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MA_TAI_LIEU)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEN_TAI_LIEU)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID_LOAI)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LINK_DOWN)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_DELETE)) == 1
+                );
+                taiLieu.setKichThuoc(cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_KICH_THUOC)));
+                taiLieuList.add(taiLieu);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return taiLieuList;
+    }
+
+    public List<TaiLieu> getTaiLieuByLoai(int idLoai) {
+        List<TaiLieu> taiLieuList = new ArrayList<>();
+        String query = "SELECT * FROM " + TABLE_TAI_LIEU + " WHERE " + COLUMN_ID_LOAI + "=? AND " + COLUMN_IS_DELETE + "=0";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(idLoai)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                TaiLieu taiLieu = new TaiLieu(
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MA_TAI_LIEU)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEN_TAI_LIEU)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID_LOAI)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LINK_DOWN)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_DELETE)) == 1
+                );
+                taiLieu.setKichThuoc(cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_KICH_THUOC)));
+                taiLieuList.add(taiLieu);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return taiLieuList;
+    }
+
+    public List<TaiLieu> getTaiLieuBySize(long size) {
+        List<TaiLieu> taiLieuList = new ArrayList<>();
+        String query = "SELECT * FROM " + TABLE_TAI_LIEU + " WHERE " + COLUMN_KICH_THUOC + ">? AND " + COLUMN_IS_DELETE + "=0";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(size)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                TaiLieu taiLieu = new TaiLieu(
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MA_TAI_LIEU)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEN_TAI_LIEU)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID_LOAI)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LINK_DOWN)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_DELETE)) == 1
+                );
+                taiLieu.setKichThuoc(cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_KICH_THUOC)));
+                taiLieuList.add(taiLieu);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return taiLieuList;
     }
 }

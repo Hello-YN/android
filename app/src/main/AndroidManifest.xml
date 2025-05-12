@@ -38,6 +38,18 @@
             android:name=".view.UpdateTaiLieu"
             android:exported="false"
             android:theme="@style/Theme.QuanlyTailieu" />
+        <activity
+            android:name=".view.DanhSachLoaiTaiLieu"
+            android:exported="false"
+            android:theme="@style/Theme.QuanlyTailieu" />
+        <activity
+            android:name=".view.ChiTietLoaiTaiLieu"
+            android:exported="false"
+            android:theme="@style/Theme.QuanlyTailieu" />
+        <activity
+            android:name=".view.UpdateLoaiTaiLieu"
+            android:exported="false"
+            android:theme="@style/Theme.QuanlyTailieu" />
     </application>
 
 </manifest>

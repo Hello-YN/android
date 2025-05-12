@@ -6,53 +6,84 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
+import com.example.quanlytailieu.R;
 import com.example.quanlytailieu.modle.LoaiTaiLieu;
-
 import java.util.List;
 
 public class LoaiTaiLieuAdapter extends ArrayAdapter<LoaiTaiLieu> {
-    private Context context;
-    private List<LoaiTaiLieu> daSachLoaiTaiLieu;
+    private final Context context;
+    private final List<LoaiTaiLieu> loaiTaiLieuList;
+    private final OnItemClickListener listener;
 
-    // Constructor nhận vào danh sách các đối tượng LoaiTaiLieu
-    public LoaiTaiLieuAdapter(Context context, List<LoaiTaiLieu> danhSachLoaiTaiLieu) {
-        super(context, 0, danhSachLoaiTaiLieu);
+    public interface OnItemClickListener {
+        void onItemClick(LoaiTaiLieu loaiTaiLieu);
+    }
+
+    // Constructor cho Spinner
+    public LoaiTaiLieuAdapter(Context context, List<LoaiTaiLieu> loaiTaiLieuList) {
+        this(context, loaiTaiLieuList, null);
+    }
+
+    // Constructor cho RecyclerView với listener
+    public LoaiTaiLieuAdapter(Context context, List<LoaiTaiLieu> loaiTaiLieuList, OnItemClickListener listener) {
+        super(context, 0, loaiTaiLieuList);
         this.context = context;
-        this.daSachLoaiTaiLieu = danhSachLoaiTaiLieu;
+        this.loaiTaiLieuList = loaiTaiLieuList;
+        this.listener = listener;
     }
 
-    // Phương thức getView() để hiển thị mỗi item trong Spinner
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+        return getCustomView(position, convertView, parent, android.R.layout.simple_spinner_item);
+    }
+
+    @Override
+    public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
+        return getCustomView(position, convertView, parent, android.R.layout.simple_spinner_dropdown_item);
+    }
+
+    private View getCustomView(int position, View convertView, ViewGroup parent, int layoutId) {
+        ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(android.R.layout.simple_spinner_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(layoutId, parent, false);
+            holder = new ViewHolder();
+            holder.tvTenLoai = convertView.findViewById(android.R.id.text1);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        // Lấy đối tượng LoaiTaiLieu tại vị trí hiện tại
-        LoaiTaiLieu loaiTaiLieu = daSachLoaiTaiLieu.get(position);
-
-        // Tìm TextView trong layout và gán tên loại tài liệu vào đó
-        TextView textView = convertView.findViewById(android.R.id.text1);
-        textView.setText(loaiTaiLieu.getTenLoai()); // Lấy tên loại tài liệu để hiển thị
+        LoaiTaiLieu loaiTaiLieu = loaiTaiLieuList.get(position);
+        holder.tvTenLoai.setText(loaiTaiLieu.getTenLoai());
 
         return convertView;
     }
 
-    // Phương thức getDropDownView() để hiển thị khi dropdown mở
-    @Override
-    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+    // Phương thức cho RecyclerView
+    public View getRecyclerView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_loai_tai_lieu, parent, false);
+            holder = new ViewHolder();
+            holder.tvTenLoai = convertView.findViewById(R.id.tvTenLoai);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        // Lấy đối tượng LoaiTaiLieu tại vị trí hiện tại
-        LoaiTaiLieu loaiTaiLieu = daSachLoaiTaiLieu.get(position);
+        LoaiTaiLieu loaiTaiLieu = loaiTaiLieuList.get(position);
+        holder.tvTenLoai.setText(loaiTaiLieu.getTenLoai());
 
-        // Tìm TextView trong layout và gán tên loại tài liệu vào đó
-        TextView textView = convertView.findViewById(android.R.id.text1);
-        textView.setText(loaiTaiLieu.getTenLoai()); // Hiển thị tên loại tài liệu khi dropdown mở
+        if (listener != null) {
+            convertView.setOnClickListener(v -> listener.onItemClick(loaiTaiLieu));
+        }
 
         return convertView;
+    }
+
+    static class ViewHolder {
+        TextView tvTenLoai;
     }
 }

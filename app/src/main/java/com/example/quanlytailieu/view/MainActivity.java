@@ -30,7 +30,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FloatingActionButton btnThemTaiLieu;
-    private Button btnThemLoaiTaiLieu;
+    private Button btnThemLoaiTaiLieu, btnLoc2MB;
     private TextView appName;
     private Spinner spinnerLoaiTaiLieu;
     private TaiLieuAdapter taiLieuAdapter;
@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private List<TaiLieu> danhSachTaiLieu;
     private List<LoaiTaiLieu> danhSachLoaiTaiLieu;
     private DatabaseHelper dbHelper;
+    private boolean isFilteredBySize = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerTaiLieu);
         btnThemTaiLieu = findViewById(R.id.btnThemTaiLieu);
         btnThemLoaiTaiLieu = findViewById(R.id.btnThemLoaiTaiLieu);
+        btnLoc2MB = findViewById(R.id.btnLoc2MB);
         appName = findViewById(R.id.appName);
         spinnerLoaiTaiLieu = findViewById(R.id.spinnerLoaiTaiLieu);
 
@@ -69,16 +71,19 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDelete(TaiLieu taiLieu) {
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                db.execSQL("UPDATE TaiLieu SET isDelete = 1 WHERE maTaiLieu = ?", new String[]{taiLieu.getMaTaiLieu()});
-                db.close();
-                Toast.makeText(MainActivity.this, "Xóa: " + taiLieu.getTenTaiLieu(), Toast.LENGTH_SHORT).show();
-                loadTaiLieu();
+                boolean result = dbHelper.deleteTaiLieu(taiLieu.getMaTaiLieu());
+                if (result) {
+                    Toast.makeText(MainActivity.this, "Xóa: " + taiLieu.getTenTaiLieu(), Toast.LENGTH_SHORT).show();
+                    loadTaiLieu();
+                } else {
+                    Toast.makeText(MainActivity.this, "Xóa thất bại", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(taiLieuAdapter);
+        loadTaiLieu();
     }
 
     private void setupSpinner() {
@@ -92,55 +97,41 @@ public class MainActivity extends AppCompatActivity {
         spinnerLoaiTaiLieu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                isFilteredBySize = false; // Reset bộ lọc kích thước khi chọn loại
                 loadTaiLieu();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                isFilteredBySize = false;
                 loadTaiLieu();
             }
         });
-
-        loadTaiLieu();
     }
 
     private void loadTaiLieu() {
         danhSachTaiLieu.clear();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        LoaiTaiLieu selectedLoai = (LoaiTaiLieu) spinnerLoaiTaiLieu.getSelectedItem();
-        String query;
-        String[] args = null;
-
-        if (selectedLoai != null && !selectedLoai.getMaLoai().equals("ALL")) {
-            query = "SELECT * FROM TaiLieu WHERE isDelete = 0 AND idLoai = ?";
-            args = new String[]{String.valueOf(selectedLoai.getId())};
+        if (isFilteredBySize) {
+            danhSachTaiLieu.addAll(dbHelper.getTaiLieuBySize(2000000));
         } else {
-            query = "SELECT * FROM TaiLieu WHERE isDelete = 0";
+            LoaiTaiLieu selectedLoai = (LoaiTaiLieu) spinnerLoaiTaiLieu.getSelectedItem();
+            if (selectedLoai != null && !selectedLoai.getMaLoai().equals("ALL")) {
+                danhSachTaiLieu.addAll(dbHelper.getTaiLieuByLoai(selectedLoai.getId()));
+            } else {
+                danhSachTaiLieu.addAll(dbHelper.getAllTaiLieu());
+            }
         }
-
-        Cursor cursor = db.rawQuery(query, args);
-        if (cursor.moveToFirst()) {
-            do {
-                String maTaiLieu = cursor.getString(cursor.getColumnIndexOrThrow("maTaiLieu"));
-                String tenTaiLieu = cursor.getString(cursor.getColumnIndexOrThrow("tenTaiLieu"));
-                int idLoai = cursor.getInt(cursor.getColumnIndexOrThrow("idLoai"));
-                String linkDown = cursor.getString(cursor.getColumnIndexOrThrow("linkDown"));
-                long kichThuoc = cursor.getLong(cursor.getColumnIndexOrThrow("kichThuoc"));
-                boolean isDelete = cursor.getInt(cursor.getColumnIndexOrThrow("isDelete")) == 1;
-
-                TaiLieu taiLieu = new TaiLieu(maTaiLieu, tenTaiLieu, idLoai, linkDown, isDelete);
-                taiLieu.setKichThuoc(kichThuoc);
-                danhSachTaiLieu.add(taiLieu);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-
         taiLieuAdapter.notifyDataSetChanged();
     }
 
     private void setupSuKien() {
-        btnThemLoaiTaiLieu.setOnClickListener(v -> startActivity(new Intent(this, add_loai_tai_lieu.class)));
+        btnThemLoaiTaiLieu.setOnClickListener(v -> startActivity(new Intent(this, DanhSachLoaiTaiLieu.class)));
+
+        btnLoc2MB.setOnClickListener(v -> {
+            isFilteredBySize = true;
+            loadTaiLieu();
+        });
+
         btnThemTaiLieu.setOnClickListener(v -> startActivity(new Intent(this, add_tai_lieu.class)));
     }
 

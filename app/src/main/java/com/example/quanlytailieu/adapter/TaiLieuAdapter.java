@@ -24,7 +24,6 @@ public class TaiLieuAdapter extends RecyclerView.Adapter<TaiLieuAdapter.TaiLieuV
     private Context context;
     private OnItemClickListener listener;
 
-    // Constructor duy nhất
     public TaiLieuAdapter(Context context, List<TaiLieu> danhSach, OnItemClickListener listener) {
         this.context = context;
         this.danhSach = (danhSach != null) ? danhSach : new ArrayList<>();
@@ -34,7 +33,6 @@ public class TaiLieuAdapter extends RecyclerView.Adapter<TaiLieuAdapter.TaiLieuV
     @NonNull
     @Override
     public TaiLieuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate layout item_tai_lieu cho từng item của RecyclerView
         View view = LayoutInflater.from(context).inflate(R.layout.item_tai_lieu, parent, false);
         return new TaiLieuViewHolder(view);
     }
@@ -43,21 +41,16 @@ public class TaiLieuAdapter extends RecyclerView.Adapter<TaiLieuAdapter.TaiLieuV
     public void onBindViewHolder(@NonNull TaiLieuViewHolder holder, int position) {
         TaiLieu tl = danhSach.get(position);
 
-        // Gán giá trị vào các TextView
         holder.tvTen.setText(tl.getTenTaiLieu());
-        holder.tvKichThuoc.setText(tl.getKichThuoc() / 1024 + " KB");
+        holder.tvKichThuoc.setText(formatSize(tl.getKichThuoc()));
 
-        // Sự kiện click vào item để mở trang chi tiết
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ChiTietTaiLieu.class);
             intent.putExtra("maTaiLieu", tl.getMaTaiLieu());
             context.startActivity(intent);
         });
 
-        // Sự kiện click vào nút sửa
         holder.btnSua.setOnClickListener(v -> listener.onEdit(tl));
-
-        // Sự kiện click vào nút xóa
         holder.btnXoa.setOnClickListener(v -> listener.onDelete(tl));
     }
 
@@ -66,14 +59,18 @@ public class TaiLieuAdapter extends RecyclerView.Adapter<TaiLieuAdapter.TaiLieuV
         return danhSach.size();
     }
 
-    // Hàm cập nhật dữ liệu của adapter
     public void updateData(List<TaiLieu> newData) {
         this.danhSach.clear();
         this.danhSach.addAll(newData);
         notifyDataSetChanged();
     }
 
-    // ViewHolder cho từng item trong RecyclerView
+    private String formatSize(long bytes) {
+        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024 * 1024) return String.format("%.2f KB", bytes / 1024.0);
+        return String.format("%.2f MB", bytes / (1024.0 * 1024.0));
+    }
+
     public class TaiLieuViewHolder extends RecyclerView.ViewHolder {
         TextView tvTen, tvKichThuoc;
         ImageView imgIcon;
@@ -89,7 +86,6 @@ public class TaiLieuAdapter extends RecyclerView.Adapter<TaiLieuAdapter.TaiLieuV
         }
     }
 
-    // Interface để xử lý sự kiện edit và delete
     public interface OnItemClickListener {
         void onEdit(TaiLieu taiLieu);
         void onDelete(TaiLieu taiLieu);

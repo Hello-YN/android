@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F4F4"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:gravity="center"
+        android:text="Sửa loại tài liệu"
+        android:textColor="#2C3E50"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvMaLoaiLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:text="Mã loại:"
+        android:textColor="#34495E"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+    <EditText
+        android:id="@+id/etMaLoai"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:hint="Nhập mã loại"
+        android:inputType="text"
+        android:textColor="#2C3E50"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvMaLoaiLabel"
+        app:layout_constraintTop_toTopOf="@id/tvMaLoaiLabel" />
+
+    <TextView
+        android:id="@+id/tvTenLoaiLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:text="Tên loại:"
+        android:textColor="#34495E"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvMaLoaiLabel" />
+
+    <EditText
+        android:id="@+id/etTenLoai"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:hint="Nhập tên loại"
+        android:inputType="text"
+        android:textColor="#2C3E50"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvTenLoaiLabel"
+        app:layout_constraintTop_toTopOf="@id/tvTenLoaiLabel" />
+
+    <TextView
+        android:id="@+id/tvMoTaLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:text="Mô tả:"
+        android:textColor="#34495E"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTenLoaiLabel" />
+
+    <EditText
+        android:id="@+id/etMoTa"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:hint="Nhập mô tả"
+        android:inputType="textMultiLine"
+        android:textColor="#2C3E50"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvMoTaLabel"
+        app:layout_constraintTop_toTopOf="@id/tvMoTaLabel" />
+
+    <Button
+        android:id="@+id/btnLuu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:backgroundTint="@android:color/white"
+        android:elevation="4dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:text="Lưu"
+        android:textColor="#2980B9"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvMoTaLabel" />
+
+    <Button
+        android:id="@+id/btnQuayLai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@android:color/white"
+        android:elevation="4dp"
+        android:fontFamily="@font/abyssinica_sil"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:text="Quay lại"
+        android:textColor="#2980B9"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnLuu" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
