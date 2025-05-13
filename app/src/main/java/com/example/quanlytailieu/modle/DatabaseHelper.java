@@ -133,9 +133,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean deleteLoaiTaiLieu(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
+        // Kiểm tra xem có tài liệu nào liên quan không
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_TAI_LIEU + " WHERE " + COLUMN_ID_LOAI + "=? AND " + COLUMN_IS_DELETE + "=0", new String[]{String.valueOf(id)});
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        cursor.close();
+        if (count > 0) {
+            db.close();
+            return false; // Không cho xóa vì có tài liệu liên quan
+        }
         ContentValues values = new ContentValues();
         values.put(COLUMN_IS_DELETE, 1);
-
         int rowsAffected = db.update(TABLE_LOAI_TAI_LIEU, values, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
         db.close();
         return rowsAffected > 0;

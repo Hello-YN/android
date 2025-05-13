@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.quanlytailieu.R;
@@ -48,9 +49,18 @@ public class TaiLieuAdapter extends RecyclerView.Adapter<TaiLieuAdapter.TaiLieuV
         holder.tvKichThuoc.setText(formatSize(taiLieu.getKichThuoc()));
 
         holder.btnXoa.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onDelete(taiLieu);
-            }
+            // Hiển thị dialog xác nhận xóa
+            new AlertDialog.Builder(context)
+                    .setTitle("Xác nhận xóa")
+                    .setMessage("Bạn có chắc chắn muốn xóa tài liệu \"" + taiLieu.getTenTaiLieu() + "\"?")
+                    .setPositiveButton("Xóa", (dialog, which) -> {
+                        if (listener != null) {
+                            listener.onDelete(taiLieu);
+                        }
+                    })
+                    .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss())
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         });
 
         holder.itemView.setOnClickListener(v -> {

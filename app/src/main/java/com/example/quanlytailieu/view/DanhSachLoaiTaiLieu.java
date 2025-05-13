@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.quanlytailieu.R;
 import com.example.quanlytailieu.modle.DatabaseHelper;
@@ -86,15 +87,23 @@ public class DanhSachLoaiTaiLieu extends AppCompatActivity {
             btnXoa.setTextColor(getResources().getColor(android.R.color.white));
             btnXoa.setPadding(8, 4, 8, 4);
 
-            // Xử lý sự kiện xóa
+            // Xử lý sự kiện xóa với dialog xác nhận
             btnXoa.setOnClickListener(v -> {
-                boolean result = dbHelper.deleteLoaiTaiLieu(loaiTaiLieu.getId());
-                if (result) {
-                    Toast.makeText(this, "Xóa loại tài liệu thành công", Toast.LENGTH_SHORT).show();
-                    loadLoaiTaiLieu(); // Làm mới danh sách
-                } else {
-                    Toast.makeText(this, "Xóa thất bại", Toast.LENGTH_SHORT).show();
-                }
+                new AlertDialog.Builder(DanhSachLoaiTaiLieu.this)
+                        .setTitle("Xác nhận xóa")
+                        .setMessage("Bạn có chắc chắn muốn xóa loại tài liệu \"" + loaiTaiLieu.getTenLoai() + "\"?")
+                        .setPositiveButton("Xóa", (dialog, which) -> {
+                            boolean result = dbHelper.deleteLoaiTaiLieu(loaiTaiLieu.getId());
+                            if (result) {
+                                Toast.makeText(this, "Xóa loại tài liệu thành công", Toast.LENGTH_SHORT).show();
+                                loadLoaiTaiLieu(); // Làm mới danh sách
+                            } else {
+                                Toast.makeText(this, "Xóa thất bại", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             });
 
             // Thêm TextView và Button vào itemLayout

@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.quanlytailieu.R;
 import com.example.quanlytailieu.modle.DatabaseHelper;
@@ -48,13 +49,22 @@ public class ChiTietLoaiTaiLieu extends AppCompatActivity {
         });
 
         btnXoa.setOnClickListener(v -> {
-            boolean result = dbHelper.deleteLoaiTaiLieu(idLoai);
-            if (result) {
-                Toast.makeText(this, "Xóa loại tài liệu thành công", Toast.LENGTH_SHORT).show();
-                finish(); // Quay lại DanhSachLoaiTaiLieu
-            } else {
-                Toast.makeText(this, "Xóa thất bại", Toast.LENGTH_SHORT).show();
-            }
+            // Hiển thị dialog xác nhận xóa
+            new AlertDialog.Builder(ChiTietLoaiTaiLieu.this)
+                    .setTitle("Xác nhận xóa")
+                    .setMessage("Bạn có chắc chắn muốn xóa loại tài liệu này?")
+                    .setPositiveButton("Xóa", (dialog, which) -> {
+                        boolean result = dbHelper.deleteLoaiTaiLieu(idLoai);
+                        if (result) {
+                            Toast.makeText(this, "Xóa loại tài liệu thành công", Toast.LENGTH_SHORT).show();
+                            finish(); // Quay lại DanhSachLoaiTaiLieu
+                        } else {
+                            Toast.makeText(this, "Xóa thất bại", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss())
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         });
 
         btnQuayLai.setOnClickListener(v -> finish());
